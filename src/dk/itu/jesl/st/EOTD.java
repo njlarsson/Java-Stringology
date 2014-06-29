@@ -40,9 +40,6 @@ public final class EOTD {
     // The only suflink that may ever change is that of an outgoing edge of the
     // root. This is set to top if the edge is split after the first character.
 
-    // The code implements scheme III. The following variables counts hash
-    // table accesses.
-
      public EOTD(Text text, int idBytes, int charBytes) {
         int n = text.length();
         this.text = text;
