@@ -155,17 +155,19 @@ public final class EOTD {
         public int position() { return j; }
     
         public boolean matchForward(Text pat, int off, int max) {
+            boolean g = (d > 0);
             int m = d + max;
+            int zpos = off - d;
             while (true) {
                 int l = min(length(t), i-j);
                 while (d < l) {
                     if (d == m) return true;
-                    if (charAt(j+d) != pat.charAt(off+d)) return false;
+                    if (charAt(j+d) != pat.charAt(zpos+d)) return false;
                     d++;
                 }
                 if (d == m) return true;
                 if (isExt(t)) return false;
-                Edge t1 = down(t, pat.charAt(off+d));
+                Edge t1 = down(t, pat.charAt(zpos+d));
                 if (t1 == null) return false;
                 t = t1;
                 d++;

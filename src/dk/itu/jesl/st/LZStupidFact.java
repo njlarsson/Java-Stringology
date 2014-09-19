@@ -10,6 +10,7 @@ public class LZStupidFact {
             // "The shells she sells are surely seashells. " +
             // "So if she sells shells on the seashore, " +
             // "I'm sure she sells seashore shells.";
+        DataOutputStream out = new DataOutputStream(new FileOutputStream(args[1]));
         EOTD st = new EOTD(new StringText(s, 0), 3, 2);
         EOTD.Pointer ptr = st.pointer();
         int i = 0, factors = 0;
@@ -20,14 +21,17 @@ public class LZStupidFact {
             ptr.matchForward(text, i, s.length()-i);
             int l = ptr.sdepth();
             if (l == 0) {
+                out.writeInt(0); out.writeInt(s.charAt(i));
                 // System.out.println("0: '" + s.charAt(i) + "'");
                 i++;
             } else {
+                out.writeInt((int) (i-ptr.position())); out.writeInt(l);
                 // System.out.println(l + ", " + (i-ptr.position()));
                 i += l;
             }
             st.update();
         }
+        out.flush();
         System.out.println("LZ factors: " + factors);
     }
 

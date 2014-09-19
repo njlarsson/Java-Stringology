@@ -48,6 +48,7 @@ public class RotFact {
             }
             st.update(xl+yl);
         }
+        out.close();
         System.out.println("Rot factors: " + factors);
     }
 
