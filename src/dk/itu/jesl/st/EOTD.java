@@ -84,7 +84,7 @@ public final class EOTD {
             if (e == c) {               // same as c, reached endpoint
                 d++; i++; return;
             } // not there, need to split some edges
-            Edge g = split(a, e);       // g will be sibling of new leaf
+            Edge g = split(a, e);       // g will be sibling of new external edge
             while (true) {              // a has just been split into a, g
                 Edge t = addExt(a, c);
                 sufLink(s, t);
@@ -139,27 +139,42 @@ public final class EOTD {
         }
     }
 
-    /** Gets the length of the longest match for a pattern, and stores position
-     * in original sting as first element of pos array. */
-    public int match(Text pat, long[] pos) {
-        Edge t = top;
-        int m = pat.length();
-        int d = 0;
-        int j = -1;
-        outer: while (d < m && !isExt(t)) {
-            t = down(t, pat.charAt(d));
-            if (t == null) break;
-            d++;
-            j = pos(t);
-            int l = min(length(t), i-j);
-            while (d < l && d < m) {
-                if (charAt(j+d) != pat.charAt(d)) break outer;
+    public final class Pointer {
+        private Edge t;
+        private int d, j;
+
+        private Pointer() { reset(); }
+        
+        public void reset() {
+            t = top;
+            d = 0;
+            j = -1;
+        }    
+        
+        public int sdepth() { return d; }
+        public int position() { return j; }
+    
+        public boolean matchForward(Text pat, int off, int max) {
+            int m = d + max;
+            while (true) {
+                int l = min(length(t), i-j);
+                while (d < l) {
+                    if (d == m) return true;
+                    if (charAt(j+d) != pat.charAt(off+d)) return false;
+                    d++;
+                }
+                if (d == m) return true;
+                if (isExt(t)) return false;
+                Edge t1 = down(t, pat.charAt(off+d));
+                if (t1 == null) return false;
+                t = t1;
                 d++;
+                j = pos(t);
             }
         }
-        pos[0] = j;
-        return d;
     }
+
+    public Pointer pointer() { return new Pointer(); }
 
     private static int min(int i, int j) { return i <= j ? i : j; }
 
